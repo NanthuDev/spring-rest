@@ -5,6 +5,7 @@ import com.nklearning.demorest.exception.ResourceNotFoundException;
 import com.nklearning.demorest.model.Employee;
 import com.nklearning.demorest.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,5 +47,15 @@ public class EmployeeController {
         UpdateEmployee.setEmail((employeeDetails.getEmail()));
         employeeRepository.save(UpdateEmployee);
         return ResponseEntity.ok(UpdateEmployee);
+     }
+
+     //Delete emp by ID
+     @DeleteMapping("{id}")
+
+     public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable long id){
+         Employee deleteEmployee = employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not exist to Delete with id:"+id));
+         employeeRepository.delete(deleteEmployee);
+
+         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
      }
 }
